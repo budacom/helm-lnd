@@ -1,0 +1,225 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "lnd.fullname" . }}
+  labels:
+    app: {{ template "lnd.name" . }}
+    chart: {{ template "lnd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  lnd.conf: |-
+    [Application Options]
+
+  {{- with .Values.services }}
+    {{ if .p2p.listen }}
+    ; Specify the interfaces to listen on for p2p connections.  One listen
+    ; address per line.
+    {{- range .p2p.listen }}
+    listen={{ . }}
+    {{ end }}
+    {{ end }}
+
+    {{- if .p2p.nolisten }}
+    ; Disable listening for incoming p2p connections.  This will override all
+    ; listeners.
+    nolisten=1
+    {{- end }}
+
+    {{ if .api.rpcListen }}
+    ; Specify the interfaces to listen on for gRPC connections.  One listen
+    ; address per line.
+    {{- range .api.rpcListen }}
+    rpclisten={{ . }}
+    {{ end }}
+    {{ end }}
+
+    {{ if .api.restListen }}
+    ; Specify the interfaces to listen on for REST connections.  One listen
+    ; address per line.
+    {{- range .api.restListen }}
+    restlisten={{ . }}
+    {{ end }}
+    {{ end }}
+  {{- end }}
+
+  {{- with .Values.lnd }}
+    {{- if .tlsextraip }}
+    ; Adds an extra ip to the generated certificate
+    ; (old tls files must be deleted if changed)
+    tlsextraip={{ .tlsextraip }}
+    {{- end }}
+
+    {{- if .tlsextradomain }}
+    ; Adds an extra domain to the generate certificate
+    ; (old tls files must be deleted if changed)
+    tlsextradomain={{ .tlsextradomain }}
+    {{- end }}
+
+    ; Path to TLS certificate for lnd's RPC and REST services.
+    tlscertpath=~/.lnd/data/certs/tls.cert
+
+    ; Path to TLS private key for lnd's RPC and REST services.
+    tlskeypath=~/.lnd/data/certs/tls.key
+
+    ; Path to write the admin macaroon for lnd's RPC and REST services if it
+    ; doesn't exist. This can be set if one wishes to store the admin macaroon in a
+    ; distinct location. By default, it is stored within lnd's network directory.
+    ; Applications that are able to read this file, gain admin macaroon access.
+    adminmacaroonpath=~/.lnd/data/macaroons/admin.macaroon
+
+    ; Path to write the read-only macaroon for lnd's RPC and REST services if it
+    ; doesn't exist. This can be set if one wishes to store the read-only macaroon
+    ; in a distinct location. The read only macaroon allows users which can read
+    ; the file to access RPCs which don't modify the state of the daemon. By
+    ; default, it is stored within lnd's network directory.
+    readonlymacaroonpath=~/.lnd/data/macaroons/readonly.macaroon
+
+    ; Path to write the invoice macaroon for lnd's RPC and REST services if it
+    ; doesn't exist. This can be set if one wishes to store the invoice macaroon in
+    ; a distinct location. By default, it is stored within lnd's network directory.
+    ; The invoice macaroon allows users which can read the file to gain read and
+    ; write access to all invoice related RPCs.
+    invoicemacaroonpath=~/.lnd/data/macaroons/invoice.macaroon
+
+    {{- if .externalip }}
+    ; Adding an external IP will advertise your node to the network. This signals
+    ; that your node is available to accept incoming channels. If you don't wish to
+    ; advertise your node, this value doesn't need to be set. Unless specified
+    ; (with host:port notation), the default port (9735) will be added to the
+    ; address.
+    externalip={{ .externalip }}
+    {{ end }}
+
+    {{- if .debugLevel }}
+    ; Debug logging level.
+    ; Valid levels are {trace, debug, info, warn, error, critical}
+    ; You may also specify <subsystem>=<level>,<subsystem2>=<level>,... to set
+    ; log level for individual subsystems.  Use btcd --debuglevel=show to list
+    ; available subsystems.
+    debuglevel={{ .debugLevel }}
+    {{ end }}
+
+    {{- if .alias }}
+    ; The alias your node will use, which can be up to 32 UTF-8 characters in
+    ; length.
+    alias={{ .alias | quote }}
+    {{ end }}
+
+    {{- if .color }}
+    ; The color of the node in hex format, used to customize node appearance in
+    ; intelligence services.
+    color={{ .color }}
+    {{ end }}
+  {{ end }}
+
+{{- if .Values.bitcoin.enabled }}
+    [Bitcoin]
+
+  {{- with .Values.bitcoin }}
+    ; If the Bitcoin chain should be active. Atm, only a single chain can be
+    ; active.
+    bitcoin.active=1
+
+    {{- if (eq .network "testnet") }}
+    ; Use Bitcoin's test network.
+    bitcoin.testnet=1
+    {{ else if (eq .network "simnet") }}
+    ; Use Bitcoin's simulation test network
+    bitcoin.simnet=1
+    {{ end }}
+
+    ; Use the {{ .node }} back-end
+    bitcoin.node={{ .node }}
+
+    {{- if .defaultchanconfs }}
+    ; The default number of confirmations a channel must have before it's considered
+    ; open. We'll require any incoming channel requests to wait this many
+    ; confirmations before we consider the channel active.
+    bitcoin.defaultchanconfs={{ .defaultchanconfs }}
+    {{ end }}
+
+    {{- if .bitcoind }}
+    [Bitcoind]
+
+    {{- if .bitcoind.rpchost }}
+    ; The host that your local bitcoind daemon is listening on. By default, this
+    ; setting is assumed to be localhost with the default port for the current
+    ; network.
+    bitcoind.rpchost={{ .bitcoind.rpchost }}
+    {{ end }}
+
+    {{- if .bitcoind.rpcuser }}
+    ; Username for RPC connections to bitcoind. By default, lnd will attempt to
+    ; automatically obtain the credentials, so this likely won't need to be set
+    ; (other than for a remote bitcoind instance).
+    bitcoind.rpcuser={{ .bitcoind.rpcuser }}
+    {{ end }}
+
+    {{- if .bitcoind.rpcpass }}
+    ; Password for RPC connections to bitcoind. By default, lnd will attempt to
+    ; automatically obtain the credentials, so this likely won't need to be set
+    ; (other than for a remote bitcoind instance).
+    bitcoind.rpcpass={{ .bitcoind.rpcpass }}
+    {{ end }}
+
+    {{- if (or .bitcoind.zmqpubrawblock  .bitcoind.zmqpubrawtx) }}
+    ; ZMQ socket which sends rawblock and rawtx notifications from bitcoind. By
+    ; default, lnd will attempt to automatically obtain this information, so this
+    ; likely won't need to be set (other than for a remote bitcoind instance).
+    bitcoind.zmqpubrawblock={{ .bitcoind.zmqpubrawblock }}
+    bitcoind.zmqpubrawtx={{ .bitcoind.zmqpubrawtx }}
+    {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+  {{- if .Values.lnd.unlock.enabled }}
+  post-start.sh: |-
+    #!/bin/bash
+    # Install curl
+    if ! [[ -n "$(which curl)" ]]
+    then
+      apk --update add curl
+    fi
+
+    CERT=/root/.lnd/data/certs/tls.cert
+    MACARRON=/root/.lnd/data/macaroons/admin.macaroon
+
+    REST_URL=https://localhost:{{ .Values.services.api.restPort }}
+    WALLET_PASSWORD=${1-$WALLET_PASSWORD}
+
+    # Wait for rest service listening
+    until (
+      netstat -lnp | grep {{ .Values.services.api.restPort }}
+    )
+    do
+      sleep 1
+    done
+
+    # Unlock wallet
+    curl \
+      --cacert $CERT \
+      -H "Grpc-Metadata-macaroon: $(xxd -p -c 1000 $MACARRON | tr -d ' ')" \
+      -X POST -d "{\"wallet_password\": \"$(echo -n $WALLET_PASSWORD | tr -d '\n' | base64)\"}" \
+      ${REST_URL}/v1/unlockwallet
+
+  {{- end }}
+  health.sh: |-
+    #!/bin/bash
+    # Install curl
+    # if ! [[ -n "$(which curl)" ]]
+    # then
+    #   apk --update add curl
+    # fi
+
+    CERT=/root/.lnd/data/certs/tls.cert
+    MACARRON=/root/.lnd/data/macaroons/readonly.macaroon
+
+    REST_URL=https://localhost:{{ .Values.services.api.restPort }}
+
+    # Test for 200
+    curl \
+      --fail \
+      --cacert $CERT \
+      -H "Grpc-Metadata-macaroon: $(xxd -p -c 1000 $MACARRON | tr -d ' ')" \
+      ${REST_URL}/v1/getinfo

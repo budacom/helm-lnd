@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "lnd.fullname" . }}-test-connection"
+  labels:
+    app.kubernetes.io/name: {{ include "lnd.name" . }}
+    helm.sh/chart: {{ include "lnd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "lnd.fullname" . }}:8080']
+  restartPolicy: Never

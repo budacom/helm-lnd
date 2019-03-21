@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lnd.fullname" . }}-api
+  labels:
+    app.kubernetes.io/name: {{ include "lnd.name" . }}
+    helm.sh/chart: {{ include "lnd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.services.api.type }}
+  ports:
+  - name: rest
+    port: {{ .Values.services.api.restPort }}
+    targetPort: rest
+    protocol: TCP
+  - name: rpc
+    port: {{ .Values.services.api.rpcPort }}
+    targetPort: rpc
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ include "lnd.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

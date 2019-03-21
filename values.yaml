@@ -1,0 +1,77 @@
+# Default values for lnd.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+updateStrategy:
+  type: "rollingUpdate"
+
+image:
+  repository: lightningnetwork/lnd-alpine
+  tag: latest
+  pullPolicy: IfNotPresent
+
+services:
+  api:
+    type: ClusterIP
+    restPort: 8080
+    restListen:
+      - 0.0.0.0
+    rpcPort: 10009
+    rpcListen: []
+
+  p2p:
+    type: LoadBalancer
+    port: 9735
+    nolisten: false
+    listen: []
+
+lnd:
+  debugLevel: info
+  # keystoreSecret: "lnd-keystore"
+  # macaroonstoreSecret: "lnd-macaroonstore"
+  # alias: My Lightning Node
+  # color: "#5293fc"
+  # externalip: ""
+  # tlsextradomain: ""
+  # tlsextraip: 10.28.0.6
+
+  unlock:
+    enabled: false
+
+bitcoin:
+  enabled: true
+  network: testnet
+  node: bitcoind
+  # defaultchanconfs: 3
+
+  bitcoind: {}
+    # rpchost: localhost: 18332
+    # rpcuser: bitcoin
+    # rpcpass: password
+    # zmqpubrawblock: tcp://127.0.0.1:28332
+    # zmqpubrawtx: tcp://127.0.0.1:29332
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: "5Gi"
+  # storageClass: "ssd"
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
