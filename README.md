@@ -148,3 +148,13 @@ kubectl exec -ti ${RELEASE_NAME}-0 -- lncli --tlscertpath /root/.lnd/data/tls.ce
 ```
 
 The follow the instructions to create or to recover a wallet.
+
+## Auto Unlock Wallet
+
+To auto unlock the wallet on every restart just enable it with `lnd.unlock.enabled: true`
+You can pass the wallet password in a secret with a key named `WALLET_PASSWORD`. You'll specify
+the name of the secret holding the password in `lnd.unlock.walletSecret`
+
+```
+kubectl create secret generic wallet-secrets --from-literal=WALLET_PASSWORD="my_password"
+```
