@@ -182,10 +182,10 @@ data:
   health.sh: |-
     #!/bin/bash
     # Install curl
-    # if ! [[ -n "$(which curl)" ]]
-    # then
-    #   apk --update add curl
-    # fi
+    if ! [[ -n "$(which curl)" ]]
+    then
+      apk --update add curl
+    fi
 
     CERT=/root/.lnd/data/certs/tls.cert
     MACARRON=/root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}/readonly.macaroon
