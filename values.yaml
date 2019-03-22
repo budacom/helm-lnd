@@ -29,7 +29,6 @@ services:
 lnd:
   debugLevel: info
   # keystoreSecret: "lnd-keystore"
-  # macaroonstoreSecret: "lnd-macaroonstore"
   # alias: My Lightning Node
   # color: "#5293fc"
   # externalip: ""

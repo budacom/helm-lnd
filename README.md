@@ -55,7 +55,6 @@ Parameter | Description | Default
 `image.pullPolicy`                    | Image pull policy                                                     | `IfNotPresent`
 `lnd.debugLevel`                      | Debug logging level                                                   | `info`
 `lnd.keystoreSecret`                  | Name of secret holding the TLS private key and certificate            | `nil`
-`lnd.macaroonstoreSecret`             | Name of secret holding the macaroons                                  | `nil`
 `lnd.alias`                           | Your node alias, e.g. `My Lightning Node`                             | `nil`
 `lnd.color`                           | The color of the node in hex format, e.g. `"#5293fc"`                 | `nil`
 `lnd.externalip`                      | IP to advertise your node to the network with                         | `nil`
@@ -123,19 +122,18 @@ Certificates can be found in lnd pod in the following files:
 
 New macaroons are generated with each deployment unless persistence is enabled. With persistence, maracoons data will be persisted across pod restarts.
 
-Macaroons can be passed in secret, which name is specified in *lnd.macaroonsSecret* value.
-Create secret as follows:
-
-```bash
-kubectl create secret generic lnd-macarronstore --from-file=admin.macaroon --from-file=invoice.macaroon --from-file=readonly.macaroon
-```
-
-You can deploy temporary lnd chart, create secret from generated macaroons, and then re-deploy lnd, providing the secret.
 Macaroons can be found in lnd pod in the following files:
 
- `/root/.lnd/data/macaroons/admin.macaroon`
- `/root/.lnd/data/macaroons/readonly.macaroon`
- `/root/.lnd/data/macaroons/invoice.macaroon`
+ `/root/.lnd/data/chain/bitcoin/{network}/admin.macaroon`
+ `/root/.lnd/data/chain/bitcoin/{network}/readonly.macaroon`
+ `/root/.lnd/data/chain/bitcoin/{network}/invoice.macaroon`
+
+You can download the generated macaroons to used them on other client applications.
+They can be download using `kubetcl cp`
+
+```
+kubectl cp ${RELEASE_NAME}-0:/root/.lnd/data/chain/bitcoin/{network}/admin.macaroon .
+```
 
 ## Create a wallet
 

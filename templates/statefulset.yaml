@@ -69,11 +69,6 @@ spec:
             mountPath: /root/.lnd/data/certs
             readOnly: true
           {{- end }}
-          {{- if .Values.lnd.macaroonstoreSecret }}
-          - name: macaroons
-            mountPath: /root/.lnd/data/macaroons
-            readOnly: true
-          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -90,17 +85,7 @@ spec:
       - name: lnd-conf
         configMap:
           name: {{ template "lnd.fullname" . }}
-          items:
-          - key: lnd.conf
-            path: lnd.conf
-          - key: health.sh
-            path: health.sh
-            mode: 0744
-          {{- if .Values.lnd.unlock.enabled }}
-          - key: post-start.sh
-            path: post-start.sh
-            mode: 0744
-          {{- end }}
+          defaultMode: 0775
       - name: logs
         emptyDir: {}
       {{- if .Values.lnd.keystoreSecret }}
@@ -113,19 +98,6 @@ spec:
             path: tls.key
           - key: tls.cert
             path: tls.cert
-      {{- end }}
-      {{- if .Values.lnd.macaroonstoreSecret }}
-      - name: macaroons
-        secret:
-          secretName: "{{ .Values.lnd.macaroonstoreSecret }}"
-          defaultMode: 448
-          items:
-          - key: admin.macaroon
-            path: admin.macaroon
-          - key: readonly.macaroon
-            path: readonly.macaroon
-          - key: invoice.macaroon
-            path: invoice.macaroon
       {{- end }}
   {{- if not .Values.persistence.enabled }}
       - name: data

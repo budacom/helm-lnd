@@ -62,26 +62,6 @@ data:
     ; Path to TLS private key for lnd's RPC and REST services.
     tlskeypath=~/.lnd/data/certs/tls.key
 
-    ; Path to write the admin macaroon for lnd's RPC and REST services if it
-    ; doesn't exist. This can be set if one wishes to store the admin macaroon in a
-    ; distinct location. By default, it is stored within lnd's network directory.
-    ; Applications that are able to read this file, gain admin macaroon access.
-    adminmacaroonpath=~/.lnd/data/macaroons/admin.macaroon
-
-    ; Path to write the read-only macaroon for lnd's RPC and REST services if it
-    ; doesn't exist. This can be set if one wishes to store the read-only macaroon
-    ; in a distinct location. The read only macaroon allows users which can read
-    ; the file to access RPCs which don't modify the state of the daemon. By
-    ; default, it is stored within lnd's network directory.
-    readonlymacaroonpath=~/.lnd/data/macaroons/readonly.macaroon
-
-    ; Path to write the invoice macaroon for lnd's RPC and REST services if it
-    ; doesn't exist. This can be set if one wishes to store the invoice macaroon in
-    ; a distinct location. By default, it is stored within lnd's network directory.
-    ; The invoice macaroon allows users which can read the file to gain read and
-    ; write access to all invoice related RPCs.
-    invoicemacaroonpath=~/.lnd/data/macaroons/invoice.macaroon
-
     {{- if .externalip }}
     ; Adding an external IP will advertise your node to the network. This signals
     ; that your node is available to accept incoming channels. If you don't wish to
@@ -178,7 +158,7 @@ data:
     fi
 
     CERT=/root/.lnd/data/certs/tls.cert
-    MACARRON=/root/.lnd/data/macaroons/admin.macaroon
+    MACARRON=/root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}/admin.macaroon
 
     REST_URL=https://localhost:{{ .Values.services.api.restPort }}
     WALLET_PASSWORD=${1-$WALLET_PASSWORD}
@@ -208,7 +188,7 @@ data:
     # fi
 
     CERT=/root/.lnd/data/certs/tls.cert
-    MACARRON=/root/.lnd/data/macaroons/readonly.macaroon
+    MACARRON=/root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}/readonly.macaroon
 
     REST_URL=https://localhost:{{ .Values.services.api.restPort }}
 
