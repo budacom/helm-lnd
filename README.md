@@ -62,6 +62,9 @@ Parameter | Description | Default
 `lnd.tlsextraip`                      | Adds an extra ip to the generated certificate                         | `nil`
 `lnd.unlock.enabled`                  | Auto-unlock the wallet with the supplied password                     | `false`
 `lnd.unlock.walletSecret`             | Name of secret holding the wallet password, e.g. `wallet-secrets`     | `nil`
+`lnd.autopilot.enabled`               | Enable auto-pilot to open channels for you                            | `false`
+`lnd.autopilot.maxchannles`           | The maximum number of channels that should be created                 | `5`
+`lnd.autopilot.allocation`            | The fraction of total funds that should be used by auto pilot         | `0.6`
 `bitcoin.enabled`                     | If the Bitcoin chain should be active                                 | `true`
 `bitcoin.network`                     | Use Bitcoin's test network to use, `simnet`, `testnet`, `mainnet`     | `testnet`
 `bitcoin.node`                        | Backend bitcoin node                                                  | `bitcoind`

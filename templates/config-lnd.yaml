@@ -147,6 +147,24 @@ data:
     {{ end }}
     {{ end }}
   {{ end }}
+
+    {{- if .Values.lnd.autopilot.enabled }}
+    [autopilot]
+
+    ; If the autopilot agent should be active or not. The autopilot agent will
+    ; attempt to automatically open up channels to put your node in an advantageous
+    ; position within the network graph.
+    autopilot.active=1
+
+    ; The maximum number of channels that should be created.
+    autopilot.maxchannels={{ .Values.lnd.autopilot.maxchannels }}
+
+    ; The fraction of total funds that should be committed to automatic channel
+    ; establishment. For example 0.6 means that 60% of the total funds available
+    ; within the wallet should be used to automatically establish channels. The total
+    ; amount of attempted channels will still respect the maxchannels param.
+    autopilot.allocation={{ .Values.lnd.autopilot.allocation }}
+    {{ end }}
 {{ end }}
   {{- if .Values.lnd.unlock.enabled }}
   post-start.sh: |-

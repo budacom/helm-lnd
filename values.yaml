@@ -38,6 +38,11 @@ lnd:
   unlock:
     enabled: false
 
+  autopilot:
+    enabled: false
+    maxchannels: 5
+    allocation: 0.6
+
 bitcoin:
   enabled: true
   network: testnet
