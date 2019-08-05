@@ -121,6 +121,13 @@ Certificates can be found in lnd pod in the following files:
  `/root/.lnd/data/certs/tls.key`
  `/root/.lnd/data/certs/tls.cert`
 
+To regenerate the certificates you can run:
+
+```
+kubectl exec -ti ${RELEASE_NAME}-0 -- rm -R /root/.lnd/data/certs
+kubectl delete pod ${RELEASE_NAME}-0
+```
+
 ### Macaroons
 
 New macaroons are generated with each deployment unless persistence is enabled. With persistence, maracoons data will be persisted across pod restarts.
@@ -142,10 +149,10 @@ kubectl cp ${RELEASE_NAME}-0:/root/.lnd/data/chain/bitcoin/{network}/admin.macar
 
 When the node is firts started, it will not have a wallet. We recommend to disable `lnd.unlock` until a wallet is created or recovered.
 
-To create a wallet, you can un the *lnd cli*:
+To create a wallet, you can run the *lnd cli*:
 
 ```
-kubectl exec -ti ${RELEASE_NAME}-0 -- lncli --tlscertpath /root/.lnd/data/tls.cert create
+kubectl exec -ti ${RELEASE_NAME}-0 -- lncli --tlscertpath /root/.lnd/data/certs/tls.cert create
 ```
 
 The follow the instructions to create or to recover a wallet.
