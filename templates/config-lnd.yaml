@@ -44,16 +44,20 @@ data:
   {{- end }}
 
   {{- with .Values.lnd }}
-    {{- if .tlsextraip }}
+    {{- if .tlsextraips }}
     ; Adds an extra ip to the generated certificate
     ; (old tls files must be deleted if changed)
-    tlsextraip={{ .tlsextraip }}
+    {{- range .tlsextraips }}
+    tlsextraip={{ . }}
+    {{- end }}
     {{- end }}
 
-    {{- if .tlsextradomain }}
+    {{- if .tlsextradomains }}
     ; Adds an extra domain to the generate certificate
     ; (old tls files must be deleted if changed)
-    tlsextradomain={{ .tlsextradomain }}
+    {{- range .tlsextradomains }}
+    tlsextradomain={{ . }}
+    {{- end }}
     {{- end }}
 
     ; Path to TLS certificate for lnd's RPC and REST services.

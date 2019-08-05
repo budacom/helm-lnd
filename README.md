@@ -58,8 +58,8 @@ Parameter | Description | Default
 `lnd.alias`                           | Your node alias, e.g. `My Lightning Node`                             | `nil`
 `lnd.color`                           | The color of the node in hex format, e.g. `"#5293fc"`                 | `nil`
 `lnd.externalip`                      | IP to advertise your node to the network with                         | `nil`
-`lnd.tlsextradomain`                  | Adds an extra domain to the generate certificate                      | `nil`
-`lnd.tlsextraip`                      | Adds an extra ip to the generated certificate                         | `nil`
+`lnd.tlsextradomains`                 | Adds an extra domain to the generate certificate                      | `nil`
+`lnd.tlsextraips`                     | Adds an extra ip to the generated certificate                         | `nil`
 `lnd.unlock.enabled`                  | Auto-unlock the wallet with the supplied password                     | `false`
 `lnd.unlock.walletSecret`             | Name of secret holding the wallet password, e.g. `wallet-secrets`     | `nil`
 `lnd.autopilot.enabled`               | Enable auto-pilot to open channels for you                            | `false`

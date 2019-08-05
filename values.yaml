@@ -7,8 +7,8 @@ updateStrategy:
   type: "rollingUpdate"
 
 image:
-  repository: lightningnetwork/lnd-alpine
-  tag: latest
+  repository: platanus/lnd
+  tag: v0.7.0-beta
   pullPolicy: IfNotPresent
 
 services:
@@ -32,8 +32,8 @@ lnd:
   # alias: My Lightning Node
   # color: "#5293fc"
   # externalip: ""
-  # tlsextradomain: ""
-  # tlsextraip: 10.28.0.6
+  # tlsextradomains: ""
+  # tlsextraips: 10.28.0.6
 
   unlock:
     enabled: false
