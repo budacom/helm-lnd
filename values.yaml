@@ -6,11 +6,6 @@ replicaCount: 1
 updateStrategy:
   type: "rollingUpdate"
 
-image:
-  repository: platanus/lnd
-  tag: v0.7.0-beta
-  pullPolicy: IfNotPresent
-
 services:
   api:
     type: ClusterIP
@@ -27,6 +22,11 @@ services:
     listen: []
 
 lnd:
+  image:
+    repository: platanus/lnd
+    tag: v0.7.1-beta
+    pullPolicy: IfNotPresent
+
   debugLevel: info
   # keystoreSecret: "lnd-keystore"
   # alias: My Lightning Node
@@ -52,6 +52,12 @@ lnd:
       # interval: 30s
       # scrapeTimeout: 10s
 
+  livenessProbe:
+    enabled: true
+
+  readinessProbe:
+    enabled: true
+
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -63,6 +69,12 @@ lnd:
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
+
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: "5Gi"
+    # storageClass: "ssd"
 
 lndmon:
   enabled: false
@@ -81,6 +93,12 @@ lndmon:
       enabled: false
       # interval: 30s
       # scrapeTimeout: 10s
+
+  livenessProbe:
+    enabled: true
+
+  readinessProbe:
+    enabled: true
 
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -106,12 +124,6 @@ bitcoin:
     # rpcpass: password
     # zmqpubrawblock: tcp://127.0.0.1:28332
     # zmqpubrawtx: tcp://127.0.0.1:29332
-
-persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: "5Gi"
-  # storageClass: "ssd"
 
 nodeSelector: {}
 

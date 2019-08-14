@@ -34,8 +34,8 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.lnd.image.repository }}:{{ .Values.lnd.image.tag }}"
+          imagePullPolicy: {{ .Values.lnd.image.pullPolicy }}
           command: ["/bin/lnd"]
           {{- if .Values.lnd.unlock.enabled }}
           envFrom:
@@ -59,16 +59,20 @@ spec:
             - name: metrics-lnd
               containerPort: 9092
               protocol: TCP
+          {{- if .Values.lnd.livenessProbe.enabled }}
           livenessProbe:
             exec:
               command:
               - /root/.lnd/health.sh
             initialDelaySeconds: 10
+          {{- end }}
+          {{- if .Values.lnd.readinessProbe.enabled }}
           readinessProbe:
             exec:
               command:
               - /root/.lnd/health.sh
             initialDelaySeconds: 10
+          {{- end }}
           resources:
             {{- toYaml .Values.lnd.resources | nindent 12 }}
           volumeMounts:
@@ -100,14 +104,18 @@ spec:
             - name: metrics-lndmon
               containerPort: 9093
               protocol: TCP
+          {{- if .Values.lndmon.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /metrics
               port: metrics-lndmon
+          {{- end }}
+          {{- if .Values.lndmon.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
               path: /metrics
               port: metrics-lndmon
+          {{- end }}
           resources:
             {{- toYaml .Values.lndmon.resources | nindent 12 }}
           volumeMounts:
@@ -144,27 +152,27 @@ spec:
           - key: tls.cert
             path: tls.cert
       {{- end }}
-  {{- if not .Values.persistence.enabled }}
+  {{- if not .Values.lnd.persistence.enabled }}
       - name: data
         emptyDir: {}
   {{- end }}
   updateStrategy:
     type: {{ .Values.updateStrategy.type }}
-  {{- if .Values.persistence.enabled }}
+  {{- if .Values.lnd.persistence.enabled }}
   volumeClaimTemplates:
   - metadata:
       name: data
     spec:
       accessModes:
-        - {{ .Values.persistence.accessMode | quote }}
-    {{- if .Values.persistence.storageClass }}
-    {{- if (eq "-" .Values.persistence.storageClass) }}
+        - {{ .Values.lnd.persistence.accessMode | quote }}
+    {{- if .Values.lnd.persistence.storageClass }}
+    {{- if (eq "-" .Values.lnd.persistence.storageClass) }}
       storageClassName: ""
     {{- else }}
-      storageClassName: "{{ .Values.persistence.storageClass }}"
+      storageClassName: "{{ .Values.lnd.persistence.storageClass }}"
     {{- end }}
     {{- end }}
       resources:
         requests:
-          storage: "{{ .Values.persistence.size }}"
+          storage: "{{ .Values.lnd.persistence.size }}"
   {{- end }}

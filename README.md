@@ -70,6 +70,13 @@ Parameter | Description | Default
 `lnd.prometheus.serviceMonitor.enabled`       | Create serviceMonitor resource for the lnd service                    | `true`
 `lnd.prometheus.serviceMonitor.interval`      | Define the scrape interval, e.g. `30s`                                | `nil`
 `lnd.prometheus.serviceMonitor.scrapeTimeout` | Define the scrape timeout, e.g. `10s`                                 | `nil`
+`lnd.persistence.enabled`                     | Use a PVC to persist configuration                                    | `true`
+`lnd.persistence.accessMode`                  | Use volume as ReadOnly or ReadWrite                                   | `ReadWriteOnce`
+`lnd.persistence.size`                        | Size of data volume                                                   | `"5Gi"`
+`lnd.persistence.storageClass`                | Storage class of backing PVC, e.g. `"ssd"`                            | `nil`
+`lnd.livenessProbe.enabled`                   | Enable/disable the readiness probe                                    | `true`
+`lnd.readinessProbe.enabled`                  | Enable/disable the liveness probe                                     | `true`
+`lnd.resources`                               | Node resources requests & limits                                      | `{}`
 `bitcoin.enabled`                             | If the Bitcoin chain should be active                                 | `true`
 `bitcoin.network`                             | Use Bitcoin's test network to use, `simnet`, `testnet`, `mainnet`     | `testnet`
 `bitcoin.node`                                | Backend bitcoin node                                                  | `bitcoind`
@@ -79,11 +86,6 @@ Parameter | Description | Default
 `bitcoin.bitcoind.rpcpass`                    | Password for RPC connections to bitcoind`password`                    | `nil`
 `bitcoin.bitcoind.zmqpubrawblock`             | ZMQ socket for rawblock notifications, e.g. `tcp://127.0.0.1:28332`   | `nil`
 `bitcoin.bitcoind.zmqpubrawtx`                | ZMQ socket for rawtx notifications, e.g. `tcp://127.0.0.1:28332`      | `nil`
-`persistence.enabled`                         | Use a PVC to persist configuration                                    | `true`
-`persistence.accessMode`                      | Use volume as ReadOnly or ReadWrite                                   | `ReadWriteOnce`
-`persistence.size`                            | Size of data volume                                                   | `"5Gi"`
-`persistence.storageClass`                    | Storage class of backing PVC, e.g. `"ssd"`                            | `nil`
-`resources`                                   | Node resources requests & limits                                      | `{}`
 `nodeSelector`                                | Node labels for data pod assignment                                   | `{}`
 `tolerations`                                 | Node tolerations                                                      | `[]`
 `affinity`                                    | Node affinity policy                                                  | `{}`
@@ -106,7 +108,6 @@ Parameter | Description | Default
 `services.p2p.listen`                 | interfaces to listen on for p2p connections                  | `[]`
 `services.p2p.nolisten`               | Disable listening for incoming p2p connections               | `false`
 
-
 Please refer to the `values.yaml` and the `templates/config-lnd.yml` files to find more thorough descriptions
 
 ### Lndmon, monitoring with prometheus
@@ -114,7 +115,7 @@ Please refer to the `values.yaml` and the `templates/config-lnd.yml` files to fi
 lndmon is a drop-in monitoring solution for your lnd node using Prometheus and Grafana. https://github.com/lightninglabs/lndmon
 
 Parameter | Description | Default
----
+---                                              | ---                                                                   | ---
 `lndmon.enabled`                                 | Enable lndmon prometheus /metrics endpoint                            | `false`
 `lndmon.image.repository`                        | lndmon container image repository                                     | `platanus/lndmon`
 `lndmon.image.tag`                               | lndmon container image tag                                            | `latest`
@@ -126,6 +127,9 @@ Parameter | Description | Default
 `lndmon.prometheus.serviceMonitor.enabled`       | Create serviceMonitor resource for the lndmon service                 | `true`
 `lndmon.prometheus.serviceMonitor.interval`      | Define the scrape interval, e.g. `30s`                                | `nil`
 `lndmon.prometheus.serviceMonitor.scrapeTimeout` | Define the scrape timeout, e.g. `10s`                                 | `nil`
+`lndmon.resources`                               | Lndmon resources requests & limits                                    | `{}`
+`lndmon.livenessProbe.enabled`                   | Enable/disable the readiness probe                                    | `true`
+`lndmon.readinessProbe.enabled`                  | Enable/disable the liveness probe                                     | `true`
 
 ### Certificates
 
