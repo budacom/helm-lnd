@@ -23,7 +23,7 @@ services:
 
 lnd:
   image:
-    repository: platanus/lnd
+    repository: budacom/lnd
     tag: v0.7.1-beta
     pullPolicy: IfNotPresent
 
@@ -79,7 +79,7 @@ lnd:
 lndmon:
   enabled: false
   image:
-    repository: platanus/lndmon
+    repository: budacom/lndmon
     tag: latest
     pullPolicy: IfNotPresent
 

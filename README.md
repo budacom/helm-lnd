@@ -40,7 +40,7 @@ Parameter | Description | Default
 ---                                           | ---                                                                   | ---
 `replicaCount`                                | amount of parallel lnd replicas to be started                         | `1`
 `updateStrategy`                              | update strategy for deployment                                        | `{type: rollingUpdate}`
-`image.repository`                            | LND container image repository                                        | `lightningnetwork/lnd-alpine`
+`image.repository`                            | LND container image repository                                        | `budacom/lnd`
 `image.tag`                                   | LND container image tag                                               | `latest`
 `image.pullPolicy`                            | Image pull policy                                                     | `IfNotPresent`
 `lnd.debugLevel`                              | Debug logging level                                                   | `info`
@@ -108,7 +108,7 @@ lndmon is a drop-in monitoring solution for your lnd node using Prometheus and G
 Parameter | Description | Default
 ---                                              | ---                                                                   | ---
 `lndmon.enabled`                                 | Enable lndmon prometheus /metrics endpoint                            | `false`
-`lndmon.image.repository`                        | lndmon container image repository                                     | `platanus/lndmon`
+`lndmon.image.repository`                        | lndmon container image repository                                     | `budacom/lndmon`
 `lndmon.image.tag`                               | lndmon container image tag                                            | `latest`
 `lndmon.image.pullPolicy`                        | Image pull policy                                                     | `IfNotPresent`
 `lndmon.prometheus.listen`                       | The host and por bind for the metrics endpoint                        | `0.0.0.0:9092`
