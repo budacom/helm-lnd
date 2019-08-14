@@ -1,48 +1,38 @@
-
-
 # Helm chart for LND Lightning Node
+
 This chart will install an [LND](https://dev.lightning.community/) server inside a kubernetes cluster. New certificates are generated on install, and a script is provided to auto-unlock the wallet if needed.
 
-### Uses
-The primary purpose of this chart was to make it easy to access kubernetes services during development.  It could also be used for any service that only needs to be accessed through a vpn or as a standard vpn.
-
-### Prerequisites Details
-
-* Kubernetes 1.6+
-* PV dynamic provisioning support on the underlying infrastructure
-
-#### StatefulSets Details
-* https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
-
-#### StatefulSets Caveats
-* https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#limitations
-
 ## Chart Details
+
 This chart will do the following:
 
-* Implemented a lnd node server using Kubernetes StatefulSets/Deployments
+* Implemented a lnd node server using Kubernetes StatefulSets
 * A way to auto-unlock the wallet
 * Statefulset provides a way to persist your node data
+* Run lndmon to gather monitoring metrics
+* Use prometheus operator servicemonitor CRD if enabled
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name my-release incubator/lnd
+git clone https://github.com/budacom/helm-lnd lnd
+helm install --name my-release lnd
 ```
 
 ## Deleting the Charts
 
 Delete the Helm deployment as normal
 
-```
-$ helm delete my-release
+```bash
+helm delete my-release
 ```
 
 > Deletion of the StatefulSet doesn't cascade to deleting associated PVCs
 
 ## Configuration
+
 The following table lists the configurable parameters of the `lnd` chart and their default values,
 and can be overwritten via the helm `--set` flag.
 
@@ -93,8 +83,9 @@ Parameter | Description | Default
 ### Services
 
 This charts expose the lnd node with two service.
-- `api` service that expose the rest and rpc servers, by default use a `ClusterIP` service to expose within the cluster.
-- `p2p` service that expose the p2p server, by default use a `LoadBalancer` service to expose to the world.
+
+* `api` service that expose the rest and rpc servers, by default use a `ClusterIP` service to expose within the cluster.
+* `p2p` service that expose the p2p server, by default use a `LoadBalancer` service to expose to the world.
 
 Parameter | Description | Default
 ---                                   | ---                                                          | ---
@@ -112,7 +103,7 @@ Please refer to the `values.yaml` and the `templates/config-lnd.yml` files to fi
 
 ### Lndmon, monitoring with prometheus
 
-lndmon is a drop-in monitoring solution for your lnd node using Prometheus and Grafana. https://github.com/lightninglabs/lndmon
+lndmon is a drop-in monitoring solution for your lnd node using Prometheus and Grafana. [lightninglabs/lndmon](https://github.com/lightninglabs/lndmon)
 
 Parameter | Description | Default
 ---                                              | ---                                                                   | ---
@@ -150,7 +141,7 @@ Certificates can be found in lnd pod in the following files:
 
 To regenerate the certificates you can run:
 
-```
+```bash
 kubectl exec -ti ${RELEASE_NAME}-0 -- rm -R /root/.lnd/data/certs
 kubectl delete pod ${RELEASE_NAME}-0
 ```
@@ -168,7 +159,7 @@ Macaroons can be found in lnd pod in the following files:
 You can download the generated macaroons to used them on other client applications.
 They can be download using `kubetcl cp`
 
-```
+```bash
 kubectl cp ${RELEASE_NAME}-0:/root/.lnd/data/chain/bitcoin/{network}/admin.macaroon .
 ```
 
@@ -178,7 +169,7 @@ When the node is firts started, it will not have a wallet. We recommend to disab
 
 To create a wallet, you can run the *lnd cli*:
 
-```
+```bash
 kubectl exec -ti ${RELEASE_NAME}-0 -- lncli --tlscertpath /root/.lnd/data/certs/tls.cert create
 ```
 
@@ -190,6 +181,19 @@ To auto unlock the wallet on every restart just enable it with `lnd.unlock.enabl
 You can pass the wallet password in a secret with a key named `WALLET_PASSWORD`. You'll specify
 the name of the secret holding the password in `lnd.unlock.walletSecret`
 
-```
+```bash
 kubectl create secret generic wallet-secrets --from-literal=WALLET_PASSWORD="my_password"
 ```
+
+## Prerequisites Details
+
+* Kubernetes 1.6+
+* PV dynamic provisioning support on the underlying infrastructure
+
+### StatefulSets Details
+
+* https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+
+### StatefulSets Caveats
+
+* https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#limitations
