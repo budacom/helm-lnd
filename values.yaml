@@ -80,7 +80,7 @@ lndmon:
   enabled: false
   image:
     repository: budacom/lndmon
-    tag: latest
+    tag: v0.1.0
     pullPolicy: IfNotPresent
 
   prometheus:

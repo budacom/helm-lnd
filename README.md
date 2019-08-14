@@ -44,7 +44,7 @@ Parameter | Description | Default
 `replicaCount`                                | amount of parallel lnd replicas to be started                         | `1`
 `updateStrategy`                              | update strategy for deployment                                        | `{type: rollingUpdate}`
 `image.repository`                            | LND container image repository                                        | `budacom/lnd`
-`image.tag`                                   | LND container image tag                                               | `latest`
+`image.tag`                                   | LND container image tag                                               | `v0.7.1-beta`
 `image.pullPolicy`                            | Image pull policy                                                     | `IfNotPresent`
 `lnd.debugLevel`                              | Debug logging level                                                   | `info`
 `lnd.keystoreSecret`                          | Name of secret holding the TLS private key and certificate            | `nil`
@@ -112,7 +112,7 @@ Parameter | Description | Default
 ---                                              | ---                                                                   | ---
 `lndmon.enabled`                                 | Enable lndmon prometheus /metrics endpoint                            | `false`
 `lndmon.image.repository`                        | lndmon container image repository                                     | `budacom/lndmon`
-`lndmon.image.tag`                               | lndmon container image tag                                            | `latest`
+`lndmon.image.tag`                               | lndmon container image tag                                            | `v0.1.0`
 `lndmon.image.pullPolicy`                        | Image pull policy                                                     | `IfNotPresent`
 `lndmon.prometheus.listen`                       | The host and por bind for the metrics endpoint                        | `0.0.0.0:9092`
 `lndmon.prometheus.logdir`                       | Directory to log output                                               | `nil`
