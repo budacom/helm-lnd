@@ -11,6 +11,9 @@ This chart will do the following:
 * Statefulset provides a way to persist your node data
 * Run lndmon to gather monitoring metrics
 * Use prometheus operator servicemonitor CRD if enabled
+* Default images are build using the Dockerfiles from the official repos. You can always build your own.
+  * <https://github.com/lightningnetwork/lnd/blob/master/docker/lnd/Dockerfile>
+  * <https://github.com/lightninglabs/lndmon/blob/master/Dockerfile>
 
 ## Installing the Chart
 
