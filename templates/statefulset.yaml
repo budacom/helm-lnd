@@ -1,3 +1,5 @@
+{{ $lnd := and .Values.lnd.prometheus.enabled .Values.lnd.prometheus.serviceMonitor.enabled }}
+{{ $lndmon := and .Values.lndmon.enabled .Values.lndmon.prometheus.serviceMonitor.enabled  }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -54,6 +56,9 @@ spec:
             - name: p2p
               containerPort: {{ .Values.services.p2p.port }}
               protocol: TCP
+            - name: metrics-lnd
+              containerPort: 9092
+              protocol: TCP
           livenessProbe:
             exec:
               command:
@@ -65,7 +70,7 @@ spec:
               - /root/.lnd/health.sh
             initialDelaySeconds: 10
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.lnd.resources | nindent 12 }}
           volumeMounts:
           - name: data
             mountPath: /root/.lnd/data
@@ -78,6 +83,37 @@ spec:
             mountPath: /root/.lnd/data/certs
             readOnly: true
           {{- end }}
+        {{- if .Values.lndmon.enabled }}
+        - name: lndmon
+          image: "{{ .Values.lndmon.image.repository }}:{{ .Values.lndmon.image.tag }}"
+          imagePullPolicy: {{ .Values.lndmon.image.pullPolicy }}
+          args:
+          - --prometheus.listenaddr={{ .Values.lndmon.prometheus.listen }}
+          {{- if .Values.lndmon.prometheus.logdir }}- --prometheus.logdir={{ .Values.lndmon.prometheus.logdir }} {{ end }}
+          {{- if .Values.lndmon.prometheus.maxlogfiles }}- --prometheus.maxlogfiles={{ .Values.lndmon.prometheus.maxlogfiles }} {{ end }}
+          {{- if .Values.lndmon.prometheus.maxlogfilesize }}- --prometheus.maxlogfilesize={{ .Values.lndmon.prometheus.maxlogfilesize }} {{ end }}
+          - --lnd.host=127.0.0.1:{{ .Values.services.api.rpcPort }}
+          - --lnd.network={{ .Values.bitcoin.network }}
+          - --lnd.tlspath=/root/.lnd/data/certs/tls.cert
+          - --lnd.macaroondir=/root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}
+          ports:
+            - name: metrics-lndmon
+              containerPort: 9093
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics-lndmon
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics-lndmon
+          resources:
+            {{- toYaml .Values.lndmon.resources | nindent 12 }}
+          volumeMounts:
+          - name: data
+            mountPath: /root/.lnd/data
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

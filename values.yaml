@@ -43,6 +43,57 @@ lnd:
     maxchannels: 5
     allocation: 0.6
 
+  prometheus:
+    enabled: false
+    listen: 0.0.0.0:9092
+
+    serviceMonitor:
+      enabled: true
+      # interval: 30s
+      # scrapeTimeout: 10s
+
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+lndmon:
+  enabled: false
+  image:
+    repository: platanus/lndmon
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  prometheus:
+    listen: 0.0.0.0:9093
+    # logdir: /root/.lndmon/logs
+    # maxlogfiles: 3
+    # maxlogfilesize: 10
+
+    serviceMonitor:
+      enabled: false
+      # interval: 30s
+      # scrapeTimeout: 10s
+
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
 bitcoin:
   enabled: true
   network: testnet
@@ -61,18 +112,6 @@ persistence:
   accessMode: ReadWriteOnce
   size: "5Gi"
   # storageClass: "ssd"
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
 
 nodeSelector: {}
 

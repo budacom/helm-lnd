@@ -1,0 +1,40 @@
+{{ $lnd := and .Values.lnd.prometheus.enabled .Values.lnd.prometheus.serviceMonitor.enabled }}
+{{ $lndmon := and .Values.lndmon.enabled .Values.lndmon.prometheus.serviceMonitor.enabled  }}
+{{- if or $lnd $lndmon }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lnd.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "lnd.name" . }}
+    helm.sh/chart: {{ include "lnd.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  endpoints:
+    {{- if $lnd }}
+    - port: metrics-lnd
+      {{- if .Values.lnd.prometheus.serviceMonitor.interval }}
+      interval: {{ .Values.lnd.prometheus.serviceMonitor.interval }}
+      {{- end }}
+      {{- if .Values.lnd.prometheus.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.lnd.prometheus.serviceMonitor.scrapeTimeout }}
+      {{- end }}
+    {{- end }}
+    {{- if $lndmon }}
+    - port: metrics-lndmon
+      {{- if .Values.lndmon.prometheus.serviceMonitor.interval }}
+      interval: {{ .Values.lndmon.prometheus.serviceMonitor.interval }}
+      {{- end }}
+      {{- if .Values.lndmon.prometheus.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.lndmon.prometheus.serviceMonitor.scrapeTimeout }}
+      {{- end }}
+    {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "lnd.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

@@ -47,41 +47,46 @@ The following table lists the configurable parameters of the `lnd` chart and the
 and can be overwritten via the helm `--set` flag.
 
 Parameter | Description | Default
----                                   | ---                                                                   | ---
-`replicaCount`                        | amount of parallel lnd replicas to be started                         | `1`
-`updateStrategy`                      | update strategy for deployment                                        | `{type: rollingUpdate}`
-`image.repository`                    | LND container image repository                                        | `lightningnetwork/lnd-alpine`
-`image.tag`                           | LND container image tag                                               | `latest`
-`image.pullPolicy`                    | Image pull policy                                                     | `IfNotPresent`
-`lnd.debugLevel`                      | Debug logging level                                                   | `info`
-`lnd.keystoreSecret`                  | Name of secret holding the TLS private key and certificate            | `nil`
-`lnd.alias`                           | Your node alias, e.g. `My Lightning Node`                             | `nil`
-`lnd.color`                           | The color of the node in hex format, e.g. `"#5293fc"`                 | `nil`
-`lnd.externalip`                      | IP to advertise your node to the network with                         | `nil`
-`lnd.tlsextradomains`                 | Adds an extra domain to the generate certificate                      | `nil`
-`lnd.tlsextraips`                     | Adds an extra ip to the generated certificate                         | `nil`
-`lnd.unlock.enabled`                  | Auto-unlock the wallet with the supplied password                     | `false`
-`lnd.unlock.walletSecret`             | Name of secret holding the wallet password, e.g. `wallet-secrets`     | `nil`
-`lnd.autopilot.enabled`               | Enable auto-pilot to open channels for you                            | `false`
-`lnd.autopilot.maxchannles`           | The maximum number of channels that should be created                 | `5`
-`lnd.autopilot.allocation`            | The fraction of total funds that should be used by auto pilot         | `0.6`
-`bitcoin.enabled`                     | If the Bitcoin chain should be active                                 | `true`
-`bitcoin.network`                     | Use Bitcoin's test network to use, `simnet`, `testnet`, `mainnet`     | `testnet`
-`bitcoin.node`                        | Backend bitcoin node                                                  | `bitcoind`
-`bitcoin.defaultchanconfs`            | Number of confirmations for a channel to be open                      | `nil`
-`bitcoin.bitcoind.rpchost`            | The host that your local bitcoind daemon is listening on              | `nil`
-`bitcoin.bitcoind.rpcuser`            | Username for RPC connections to bitcoind`bitcoin`                     | `nil`
-`bitcoin.bitcoind.rpcpass`            | Password for RPC connections to bitcoind`password`                    | `nil`
-`bitcoin.bitcoind.zmqpubrawblock`     | ZMQ socket for rawblock notifications, e.g. `tcp://127.0.0.1:28332`   | `nil`
-`bitcoin.bitcoind.zmqpubrawtx`        | ZMQ socket for rawtx notifications, e.g. `tcp://127.0.0.1:28332`      | `nil`
-`persistence.enabled`                 | Use a PVC to persist configuration                                    | `true`
-`persistence.accessMode`              | Use volume as ReadOnly or ReadWrite                                   | `ReadWriteOnce`
-`persistence.size`                    | Size of data volume                                                   | `"5Gi"`
-`persistence.storageClass`            | Storage class of backing PVC, e.g. `"ssd"`                            | `nil`
-`resources`                           | Node resources requests & limits                                      | `{}`
-`nodeSelector`                        | Node labels for data pod assignment                                   | `{}`
-`tolerations`                         | Node tolerations                                                      | `[]`
-`affinity`                            | Node affinity policy                                                  | `{}`
+---                                           | ---                                                                   | ---
+`replicaCount`                                | amount of parallel lnd replicas to be started                         | `1`
+`updateStrategy`                              | update strategy for deployment                                        | `{type: rollingUpdate}`
+`image.repository`                            | LND container image repository                                        | `lightningnetwork/lnd-alpine`
+`image.tag`                                   | LND container image tag                                               | `latest`
+`image.pullPolicy`                            | Image pull policy                                                     | `IfNotPresent`
+`lnd.debugLevel`                              | Debug logging level                                                   | `info`
+`lnd.keystoreSecret`                          | Name of secret holding the TLS private key and certificate            | `nil`
+`lnd.alias`                                   | Your node alias, e.g. `My Lightning Node`                             | `nil`
+`lnd.color`                                   | The color of the node in hex format, e.g. `"#5293fc"`                 | `nil`
+`lnd.externalip`                              | IP to advertise your node to the network with                         | `nil`
+`lnd.tlsextradomains`                         | Adds an extra domain to the generate certificate                      | `nil`
+`lnd.tlsextraips`                             | Adds an extra ip to the generated certificate                         | `nil`
+`lnd.unlock.enabled`                          | Auto-unlock the wallet with the supplied password                     | `false`
+`lnd.unlock.walletSecret`                     | Name of secret holding the wallet password, e.g. `wallet-secrets`     | `nil`
+`lnd.autopilot.enabled`                       | Enable auto-pilot to open channels for you                            | `false`
+`lnd.autopilot.maxchannles`                   | The maximum number of channels that should be created                 | `5`
+`lnd.autopilot.allocation`                    | The fraction of total funds that should be used by auto pilot         | `0.6`
+`lnd.prometheus.enabled`                      | Enable prometheus /metrics endpoint                                   | `false`
+`lnd.prometheus.listen`                       | The host and por bind for the metrics endpoint                        | `0.0.0.0:9092`
+`lnd.prometheus.serviceMonitor.enabled`       | Create serviceMonitor resource for the lnd service                    | `true`
+`lnd.prometheus.serviceMonitor.interval`      | Define the scrape interval, e.g. `30s`                                | `nil`
+`lnd.prometheus.serviceMonitor.scrapeTimeout` | Define the scrape timeout, e.g. `10s`                                 | `nil`
+`bitcoin.enabled`                             | If the Bitcoin chain should be active                                 | `true`
+`bitcoin.network`                             | Use Bitcoin's test network to use, `simnet`, `testnet`, `mainnet`     | `testnet`
+`bitcoin.node`                                | Backend bitcoin node                                                  | `bitcoind`
+`bitcoin.defaultchanconfs`                    | Number of confirmations for a channel to be open                      | `nil`
+`bitcoin.bitcoind.rpchost`                    | The host that your local bitcoind daemon is listening on              | `nil`
+`bitcoin.bitcoind.rpcuser`                    | Username for RPC connections to bitcoind`bitcoin`                     | `nil`
+`bitcoin.bitcoind.rpcpass`                    | Password for RPC connections to bitcoind`password`                    | `nil`
+`bitcoin.bitcoind.zmqpubrawblock`             | ZMQ socket for rawblock notifications, e.g. `tcp://127.0.0.1:28332`   | `nil`
+`bitcoin.bitcoind.zmqpubrawtx`                | ZMQ socket for rawtx notifications, e.g. `tcp://127.0.0.1:28332`      | `nil`
+`persistence.enabled`                         | Use a PVC to persist configuration                                    | `true`
+`persistence.accessMode`                      | Use volume as ReadOnly or ReadWrite                                   | `ReadWriteOnce`
+`persistence.size`                            | Size of data volume                                                   | `"5Gi"`
+`persistence.storageClass`                    | Storage class of backing PVC, e.g. `"ssd"`                            | `nil`
+`resources`                                   | Node resources requests & limits                                      | `{}`
+`nodeSelector`                                | Node labels for data pod assignment                                   | `{}`
+`tolerations`                                 | Node tolerations                                                      | `[]`
+`affinity`                                    | Node affinity policy                                                  | `{}`
 
 ### Services
 
@@ -103,6 +108,24 @@ Parameter | Description | Default
 
 
 Please refer to the `values.yaml` and the `templates/config-lnd.yml` files to find more thorough descriptions
+
+### Lndmon, monitoring with prometheus
+
+lndmon is a drop-in monitoring solution for your lnd node using Prometheus and Grafana. https://github.com/lightninglabs/lndmon
+
+Parameter | Description | Default
+---
+`lndmon.enabled`                                 | Enable lndmon prometheus /metrics endpoint                            | `false`
+`lndmon.image.repository`                        | lndmon container image repository                                     | `platanus/lndmon`
+`lndmon.image.tag`                               | lndmon container image tag                                            | `latest`
+`lndmon.image.pullPolicy`                        | Image pull policy                                                     | `IfNotPresent`
+`lndmon.prometheus.listen`                       | The host and por bind for the metrics endpoint                        | `0.0.0.0:9092`
+`lndmon.prometheus.logdir`                       | Directory to log output                                               | `nil`
+`lndmon.prometheus.maxlogfiles`                  | Maximum log files to keep (0 for no rotation)                         | `nil`
+`lndmon.prometheus.maxlogfilesize`               | Maximum log file size in MB                                           | `nil`
+`lndmon.prometheus.serviceMonitor.enabled`       | Create serviceMonitor resource for the lndmon service                 | `true`
+`lndmon.prometheus.serviceMonitor.interval`      | Define the scrape interval, e.g. `30s`                                | `nil`
+`lndmon.prometheus.serviceMonitor.scrapeTimeout` | Define the scrape timeout, e.g. `10s`                                 | `nil`
 
 ### Certificates
 

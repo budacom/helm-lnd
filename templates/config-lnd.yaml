@@ -97,6 +97,13 @@ data:
     {{ end }}
   {{ end }}
 
+{{- if .Values.lnd.prometheus.enabled }}
+    [Prometheus]
+
+    prometheus.enable=1
+    prometheus.listen={{ .Values.lnd.prometheus.listen }}
+{{ end }}
+
 {{- if .Values.bitcoin.enabled }}
     [Bitcoin]
 
