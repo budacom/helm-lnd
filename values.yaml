@@ -83,6 +83,10 @@ lndmon:
     tag: v0.1.0
     pullPolicy: IfNotPresent
 
+  defaultDashboards:
+    enabled: false
+    sidecarLabel: grafana_dashboard
+
   prometheus:
     listen: 0.0.0.0:9093
     # logdir: /root/.lndmon/logs
