@@ -9,7 +9,7 @@ This chart will do the following:
 * Implemented a lnd node server using Kubernetes StatefulSets
 * A way to auto-unlock the wallet
 * Statefulset provides a way to persist your node data
-* Run lndmon to gather monitoring metrics
+* Run lndmon to gather monitoring metrics and provision grafana default dashboards
 * Use prometheus operator servicemonitor CRD if enabled
 * Default images are build using the Dockerfiles from the official repos. You can always build your own.
   * <https://github.com/lightningnetwork/lnd/blob/master/docker/lnd/Dockerfile>
