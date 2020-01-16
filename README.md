@@ -67,8 +67,8 @@ Parameter | Description | Default
 `lnd.persistence.accessMode`                  | Use volume as ReadOnly or ReadWrite                                   | `ReadWriteOnce`
 `lnd.persistence.size`                        | Size of data volume                                                   | `"5Gi"`
 `lnd.persistence.storageClass`                | Storage class of backing PVC, e.g. `"ssd"`                            | `nil`
-`lnd.livenessProbe.enabled`                   | Enable/disable the readiness probe                                    | `true`
-`lnd.readinessProbe.enabled`                  | Enable/disable the liveness probe                                     | `true`
+`lnd.livenessProbe.enabled`                   | Enable/disable the readiness probe                                    | `false`
+`lnd.readinessProbe.enabled`                  | Enable/disable the liveness probe                                     | `false`
 `lnd.resources`                               | Node resources requests & limits                                      | `{}`
 `bitcoin.enabled`                             | If the Bitcoin chain should be active                                 | `true`
 `bitcoin.network`                             | Use Bitcoin's test network to use, `simnet`, `testnet`, `mainnet`     | `testnet`
@@ -122,8 +122,8 @@ Parameter | Description | Default
 `lndmon.prometheus.serviceMonitor.interval`      | Define the scrape interval, e.g. `30s`                                | `nil`
 `lndmon.prometheus.serviceMonitor.scrapeTimeout` | Define the scrape timeout, e.g. `10s`                                 | `nil`
 `lndmon.resources`                               | Lndmon resources requests & limits                                    | `{}`
-`lndmon.livenessProbe.enabled`                   | Enable/disable the readiness probe                                    | `true`
-`lndmon.readinessProbe.enabled`                  | Enable/disable the liveness probe                                     | `true`
+`lndmon.livenessProbe.enabled`                   | Enable/disable the readiness probe                                    | `false`
+`lndmon.readinessProbe.enabled`                  | Enable/disable the liveness probe                                     | `false`
 
 ### Certificates
 
