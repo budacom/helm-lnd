@@ -3,8 +3,9 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
+# serviceName: my-lnd
 updateStrategy:
-  type: "rollingUpdate"
+  type: "RollingUpdate"
 
 services:
   api:
