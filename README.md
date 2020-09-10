@@ -125,6 +125,19 @@ Parameter | Description | Default
 `lndmon.livenessProbe.enabled`                   | Enable/disable the readiness probe                                    | `false`
 `lndmon.readinessProbe.enabled`                  | Enable/disable the liveness probe                                     | `false`
 
+
+### Lndbackup, static channel backups
+
+lndbackup is a simple application that subscribe to the static channel backups from lnd and upload them to google cloud storage.
+
+Parameter | Description | Default
+---                                              | ---                                                                   | ---
+`lndbackup.enabled`                              | Enable lndbackup prometheus /metrics endpoint                         | `false`
+`lndbackup.image.repository`                     | lndbackup container image repository                                  | `budacom/lndbackup`
+`lndbackup.image.tag`                            | lndbackup container image tag                                         | `v0.1.0`
+`lndbackup.bucketUrl`                            | lndbackup target gsc bucket                                           | `gs://my_bucket/path`
+
+
 ### Certificates
 
 New certificates are generated with each deployment unless persistence is enabled. With persistence, certificate data will be persisted across pod restarts.

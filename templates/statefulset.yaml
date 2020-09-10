@@ -123,6 +123,21 @@ spec:
           - name: data
             mountPath: /root/.lnd/data
         {{- end }}
+        {{- if .Values.lndmon.enabled }}
+        - name: lndbackup
+          image: "{{ .Values.lndbackup.image.repository }}:{{ .Values.lndbackup.image.tag }}"
+          imagePullPolicy: {{ .Values.lndbackup.image.pullPolicy }}
+          args:
+          - --rpc-host=127.0.0.1
+          - --rpc-port={{ .Values.services.api.rpcPort }}
+          - --network={{ .Values.bitcoin.network }}
+          - --tls-cert-path=/root/.lnd/data/certs/tls.cert
+          - --macaroon-dir=/root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}
+          - --bucket-url={{ .Values.lndbackup.bucketUrl }}
+          volumeMounts:
+          - name: data
+            mountPath: /root/.lnd/data
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

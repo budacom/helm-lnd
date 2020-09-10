@@ -117,6 +117,15 @@ lndmon:
   #  cpu: 100m
   #  memory: 128Mi
 
+lndbackup:
+  enabled: false
+  image:
+    repository: budacom/lndbackup
+    tag: latest
+    pullPolicy: Always
+
+  # bucket-url: gs://bucket_name/path
+
 bitcoin:
   enabled: true
   network: testnet
