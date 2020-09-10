@@ -124,7 +124,7 @@ lndbackup:
     tag: latest
     pullPolicy: Always
 
-  # bucket-url: gs://bucket_name/path
+  # bucketUrl: gs://bucket_name/path
 
 bitcoin:
   enabled: true

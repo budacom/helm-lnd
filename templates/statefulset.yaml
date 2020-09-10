@@ -123,7 +123,7 @@ spec:
           - name: data
             mountPath: /root/.lnd/data
         {{- end }}
-        {{- if .Values.lndmon.enabled }}
+        {{- if .Values.lndbackup.enabled }}
         - name: lndbackup
           image: "{{ .Values.lndbackup.image.repository }}:{{ .Values.lndbackup.image.tag }}"
           imagePullPolicy: {{ .Values.lndbackup.image.pullPolicy }}
