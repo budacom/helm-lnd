@@ -5,22 +5,17 @@ kind: StatefulSet
 metadata:
   name: {{ include "lnd.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "lnd.name" . }}
-    helm.sh/chart: {{ include "lnd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "lnd.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "lnd.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "lnd.selectorLabels" . | nindent 6 }}
   serviceName: {{ .Values.serviceName | default .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "lnd.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "lnd.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/config-lnd.yaml") . | sha256sum }}
     spec:

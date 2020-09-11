@@ -6,10 +6,7 @@ kind: ServiceMonitor
 metadata:
   name: {{ include "lnd.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "lnd.name" . }}
-    helm.sh/chart: {{ include "lnd.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "lnd.labels" . | nindent 4 }}
 spec:
   endpoints:
     {{- if $lnd }}
@@ -35,6 +32,5 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "lnd.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "lnd.selectorLabels" . | nindent 6 }}
 {{- end }}

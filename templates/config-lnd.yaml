@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "lnd.fullname" . }}
   labels:
-    app: {{ template "lnd.name" . }}
-    chart: {{ template "lnd.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "lnd.labels" . | nindent 4 }}
 data:
   lnd.conf: |-
     [Application Options]
