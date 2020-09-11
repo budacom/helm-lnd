@@ -134,6 +134,11 @@ lndbackup:
     pullPolicy: Always
 
   # bucketUrl: gs://bucket_name/path
+  provider: gcs
+
+  gcs:
+    secretName: lnd-manager
+    keyFilename: service-account.json
 
 bitcoin:
   enabled: true

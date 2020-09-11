@@ -136,6 +136,9 @@ Parameter | Description | Default
 `lndbackup.image.repository`                     | lndbackup container image repository                                  | `budacom/lndbackup`
 `lndbackup.image.tag`                            | lndbackup container image tag                                         | `v0.1.0`
 `lndbackup.bucketUrl`                            | lndbackup target gsc bucket                                           | `gs://my_bucket/path`
+`lndbackup.provider`                             | Object storage provider to backup to `gcs`                            | `gcs`
+`lndbackup.gcs.secretName`                       | Secret that holds the service account key to write to the bucket      | `lnd-manager`
+`lndbackup.gcs.keyFilename`                      | Key to the json file in the secret                                    | `service-account.json`
 
 
 ### Certificates

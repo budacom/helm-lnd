@@ -130,9 +130,18 @@ spec:
           - --tls-cert-path=/root/.lnd/data/certs/tls.cert
           - --macaroon-dir=/root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}
           - --bucket-url={{ .Values.lndbackup.bucketUrl }}
+          {{- if eq .Values.lndbackup.provider "gcs" }}
+          env:
+            - name: "GOOGLE_APPLICATION_CREDENTIALS"
+              value: /var/run/secret/cloud.google.com/{{ .Values.lndbackup.gcs.keyFilename }}
+          {{- end }}
           volumeMounts:
           - name: data
             mountPath: /root/.lnd/data
+          {{- if eq .Values.lndbackup.provider "gcs" }}
+          - name: "service-account"
+            mountPath: "/var/run/secret/cloud.google.com"
+          {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -163,6 +172,11 @@ spec:
             path: tls.key
           - key: tls.cert
             path: tls.cert
+      {{- end }}
+      {{- if eq .Values.lndbackup.provider "gcs" }}
+      - name: "service-account"
+        secret:
+          secretName: {{ .Values.lndbackup.gcs.secretName }}
       {{- end }}
   {{- if not .Values.lnd.persistence.enabled }}
       - name: data
