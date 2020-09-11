@@ -19,6 +19,7 @@ spec:
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/config-lnd.yaml") . | sha256sum }}
     spec:
+      serviceAccountName: {{ include "lnd.serviceAccountName" . }}
       {{- if not .Values.lnd.keystoreSecret }}
       initContainers:
         - name: lnd-init
