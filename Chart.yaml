@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "v0.11-1-beta"
 description: A Helm chart for Kubernetes
 name: lnd
-version: 0.2.0
+version: 0.3.0
