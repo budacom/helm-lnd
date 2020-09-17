@@ -29,7 +29,7 @@ spec:
             mountPath: /root/.lnd/data
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: lnd
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/lnd"]
