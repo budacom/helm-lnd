@@ -30,8 +30,8 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.lnd.image.repository }}:{{ .Values.lnd.image.tag }}"
-          imagePullPolicy: {{ .Values.lnd.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/lnd"]
           {{- if .Values.lnd.unlock.enabled }}
           envFrom:

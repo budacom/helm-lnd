@@ -7,6 +7,11 @@ replicaCount: 1
 updateStrategy:
   type: "RollingUpdate"
 
+image:
+  repository: budacom/lnd
+  tag: v0.11.0-beta
+  pullPolicy: IfNotPresent
+
 services:
   api:
     type: ClusterIP
@@ -23,11 +28,6 @@ services:
     listen: []
 
 lnd:
-  image:
-    repository: budacom/lnd
-    tag: v0.7.1-beta
-    pullPolicy: IfNotPresent
-
   debugLevel: info
   # keystoreSecret: "lnd-keystore"
   # alias: My Lightning Node
