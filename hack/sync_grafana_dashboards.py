@@ -27,23 +27,23 @@ def change_style(style, representer):
 # Source files list
 charts = [
     {
-        'source': 'https://raw.githubusercontent.com/budacom/lndmon/kubernetes-dashboards/grafana/provisioning/dashboards/chain.json',
+        'source': 'https://raw.githubusercontent.com/lightninglabs/lndmon/master/grafana/provisioning/dashboards/chain.json',
         'destination': '../templates/grafana/dashboards'
     },
     {
-        'source': 'https://raw.githubusercontent.com/budacom/lndmon/kubernetes-dashboards/grafana/provisioning/dashboards/channels.json',
+        'source': 'https://raw.githubusercontent.com/lightninglabs/lndmon/master/grafana/provisioning/dashboards/channels.json',
         'destination': '../templates/grafana/dashboards'
     },
     {
-        'source': 'https://raw.githubusercontent.com/budacom/lndmon/kubernetes-dashboards/grafana/provisioning/dashboards/network.json',
+        'source': 'https://raw.githubusercontent.com/lightninglabs/lndmon/master/grafana/provisioning/dashboards/network.json',
         'destination': '../templates/grafana/dashboards'
     },
     {
-        'source': 'https://raw.githubusercontent.com/budacom/lndmon/kubernetes-dashboards/grafana/provisioning/dashboards/peers.json',
+        'source': 'https://raw.githubusercontent.com/lightninglabs/lndmon/master/grafana/provisioning/dashboards/peers.json',
         'destination': '../templates/grafana/dashboards'
     },
     {
-        'source': 'https://raw.githubusercontent.com/budacom/lndmon/kubernetes-dashboards/grafana/provisioning/dashboards/perf.json',
+        'source': 'https://raw.githubusercontent.com/lightninglabs/lndmon/master/grafana/provisioning/dashboards/perf.json',
         'destination': '../templates/grafana/dashboards'
     },
 ]
