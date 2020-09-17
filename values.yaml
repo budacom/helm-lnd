@@ -28,21 +28,12 @@ services:
     listen: []
 
 lnd:
-  debugLevel: info
-  # keystoreSecret: "lnd-keystore"
-  # alias: My Lightning Node
-  # color: "#5293fc"
-  # externalip: ""
-  # tlsextradomains: ""
-  # tlsextraips: 10.28.0.6
+  additionalConfig: |-
+    ;debuglevel=info
+    ;protocol.wumbo-channels=1
 
   unlock:
     enabled: false
-
-  autopilot:
-    enabled: false
-    maxchannels: 5
-    allocation: 0.6
 
   prometheus:
     enabled: false

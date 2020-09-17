@@ -6,174 +6,63 @@ metadata:
     {{- include "lnd.labels" . | nindent 4 }}
 data:
   lnd.conf: |-
-    [Application Options]
 
-  {{- with .Values.services }}
-    {{ if .p2p.listen }}
-    ; Specify the interfaces to listen on for p2p connections.  One listen
-    ; address per line.
-    {{- range .p2p.listen }}
+    ; Config built from helm values
+    tlscertpath=~/.lnd/data/certs/tls.cert
+    tlskeypath=~/.lnd/data/certs/tls.key
+
+  {{ with .Values.services }}
+    {{- if .p2p.listen }}
+    {{- range .p2p.listen -}}
     listen={{ . }}
     {{ end }}
-    {{ end }}
-
+    {{ end -}}
     {{- if .p2p.nolisten }}
-    ; Disable listening for incoming p2p connections.  This will override all
-    ; listeners.
     nolisten=1
     {{- end }}
-
-    {{ if .api.rpcListen }}
-    ; Specify the interfaces to listen on for gRPC connections.  One listen
-    ; address per line.
+    {{- if .api.rpcListen }}
     {{- range .api.rpcListen }}
     rpclisten={{ . }}
-    {{ end }}
-    {{ end }}
-
-    {{ if .api.restListen }}
-    ; Specify the interfaces to listen on for REST connections.  One listen
-    ; address per line.
+    {{- end }}
+    {{ end -}}
+    {{- if .api.restListen }}
     {{- range .api.restListen }}
     restlisten={{ . }}
     {{ end }}
-    {{ end }}
-  {{- end }}
-
-  {{- with .Values.lnd }}
-    {{- if .tlsextraips }}
-    ; Adds an extra ip to the generated certificate
-    ; (old tls files must be deleted if changed)
-    {{- range .tlsextraips }}
-    tlsextraip={{ . }}
-    {{- end }}
-    {{- end }}
-
-    {{- if .tlsextradomains }}
-    ; Adds an extra domain to the generate certificate
-    ; (old tls files must be deleted if changed)
-    {{- range .tlsextradomains }}
-    tlsextradomain={{ . }}
-    {{- end }}
-    {{- end }}
-
-    ; Path to TLS certificate for lnd's RPC and REST services.
-    tlscertpath=~/.lnd/data/certs/tls.cert
-
-    ; Path to TLS private key for lnd's RPC and REST services.
-    tlskeypath=~/.lnd/data/certs/tls.key
-
-    {{- if .externalip }}
-    ; Adding an external IP will advertise your node to the network. This signals
-    ; that your node is available to accept incoming channels. If you don't wish to
-    ; advertise your node, this value doesn't need to be set. Unless specified
-    ; (with host:port notation), the default port (9735) will be added to the
-    ; address.
-    externalip={{ .externalip }}
-    {{ end }}
-
-    {{- if .debugLevel }}
-    ; Debug logging level.
-    ; Valid levels are {trace, debug, info, warn, error, critical}
-    ; You may also specify <subsystem>=<level>,<subsystem2>=<level>,... to set
-    ; log level for individual subsystems.  Use btcd --debuglevel=show to list
-    ; available subsystems.
-    debuglevel={{ .debugLevel }}
-    {{ end }}
-
-    {{- if .alias }}
-    ; The alias your node will use, which can be up to 32 UTF-8 characters in
-    ; length.
-    alias={{ .alias | quote }}
-    {{ end }}
-
-    {{- if .color }}
-    ; The color of the node in hex format, used to customize node appearance in
-    ; intelligence services.
-    color={{ .color }}
-    {{ end }}
-  {{ end }}
+    {{ end -}}
+  {{- end -}}
 
 {{- if .Values.lnd.prometheus.enabled }}
-    [Prometheus]
-
     prometheus.enable=1
     prometheus.listen={{ .Values.lnd.prometheus.listen }}
 {{ end }}
 
 {{- if .Values.bitcoin.enabled }}
-    [Bitcoin]
-
   {{- with .Values.bitcoin }}
-    ; If the Bitcoin chain should be active. Atm, only a single chain can be
-    ; active.
     bitcoin.active=1
-
-    ; Use Bitcoin's {{ .network }} network.
     bitcoin.{{ .network }}=1
-
-    ; Use the {{ .node }} back-end
     bitcoin.node={{ .node }}
-
-    {{- if .defaultchanconfs }}
-    ; The default number of confirmations a channel must have before it's considered
-    ; open. We'll require any incoming channel requests to wait this many
-    ; confirmations before we consider the channel active.
-    bitcoin.defaultchanconfs={{ .defaultchanconfs }}
-    {{ end }}
-
     {{- if .bitcoind }}
-    [Bitcoind]
-
     {{- if .bitcoind.rpchost }}
-    ; The host that your local bitcoind daemon is listening on. By default, this
-    ; setting is assumed to be localhost with the default port for the current
-    ; network.
     bitcoind.rpchost={{ .bitcoind.rpchost }}
     {{ end }}
-
     {{- if .bitcoind.rpcuser }}
-    ; Username for RPC connections to bitcoind. By default, lnd will attempt to
-    ; automatically obtain the credentials, so this likely won't need to be set
-    ; (other than for a remote bitcoind instance).
     bitcoind.rpcuser={{ .bitcoind.rpcuser }}
     {{ end }}
-
     {{- if .bitcoind.rpcpass }}
-    ; Password for RPC connections to bitcoind. By default, lnd will attempt to
-    ; automatically obtain the credentials, so this likely won't need to be set
-    ; (other than for a remote bitcoind instance).
     bitcoind.rpcpass={{ .bitcoind.rpcpass }}
     {{ end }}
-
     {{- if (or .bitcoind.zmqpubrawblock  .bitcoind.zmqpubrawtx) }}
-    ; ZMQ socket which sends rawblock and rawtx notifications from bitcoind. By
-    ; default, lnd will attempt to automatically obtain this information, so this
-    ; likely won't need to be set (other than for a remote bitcoind instance).
     bitcoind.zmqpubrawblock={{ .bitcoind.zmqpubrawblock }}
     bitcoind.zmqpubrawtx={{ .bitcoind.zmqpubrawtx }}
-    {{ end }}
-    {{ end }}
-  {{ end }}
+    {{ end -}}
+    {{ end -}}
+  {{ end -}}
+{{- end }}
 
-    {{- if .Values.lnd.autopilot.enabled }}
-    [autopilot]
+    ; Addition config from helm values
+{{ .Values.lnd.additionalConfig | indent 4 }}
 
-    ; If the autopilot agent should be active or not. The autopilot agent will
-    ; attempt to automatically open up channels to put your node in an advantageous
-    ; position within the network graph.
-    autopilot.active=1
-
-    ; The maximum number of channels that should be created.
-    autopilot.maxchannels={{ .Values.lnd.autopilot.maxchannels }}
-
-    ; The fraction of total funds that should be committed to automatic channel
-    ; establishment. For example 0.6 means that 60% of the total funds available
-    ; within the wallet should be used to automatically establish channels. The total
-    ; amount of attempted channels will still respect the maxchannels param.
-    autopilot.allocation={{ .Values.lnd.autopilot.allocation }}
-    {{ end }}
-{{ end }}
   {{- if .Values.lnd.unlock.enabled }}
   post-start.sh: |-
     #!/bin/bash

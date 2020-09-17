@@ -46,18 +46,10 @@ Parameter | Description | Default
 `image.repository`                            | LND container image repository                                        | `budacom/lnd`
 `image.tag`                                   | LND container image tag                                               | `v0.7.1-beta`
 `image.pullPolicy`                            | Image pull policy                                                     | `IfNotPresent`
-`lnd.debugLevel`                              | Debug logging level                                                   | `info`
 `lnd.keystoreSecret`                          | Name of secret holding the TLS private key and certificate            | `nil`
-`lnd.alias`                                   | Your node alias, e.g. `My Lightning Node`                             | `nil`
-`lnd.color`                                   | The color of the node in hex format, e.g. `"#5293fc"`                 | `nil`
-`lnd.externalip`                              | IP to advertise your node to the network with                         | `nil`
-`lnd.tlsextradomains`                         | Adds an extra domain to the generate certificate                      | `nil`
-`lnd.tlsextraips`                             | Adds an extra ip to the generated certificate                         | `nil`
+`lnd.additionalConfig`                        | Additional configuration to pass to lnd                               | `""`
 `lnd.unlock.enabled`                          | Auto-unlock the wallet with the supplied password                     | `false`
 `lnd.unlock.walletSecret`                     | Name of secret holding the wallet password, e.g. `wallet-secrets`     | `nil`
-`lnd.autopilot.enabled`                       | Enable auto-pilot to open channels for you                            | `false`
-`lnd.autopilot.maxchannles`                   | The maximum number of channels that should be created                 | `5`
-`lnd.autopilot.allocation`                    | The fraction of total funds that should be used by auto pilot         | `0.6`
 `lnd.prometheus.enabled`                      | Enable prometheus /metrics endpoint                                   | `false`
 `lnd.prometheus.listen`                       | The host and por bind for the metrics endpoint                        | `0.0.0.0:9092`
 `lnd.prometheus.serviceMonitor.enabled`       | Create serviceMonitor resource for the lnd service                    | `true`
