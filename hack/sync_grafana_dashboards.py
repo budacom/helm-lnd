@@ -56,7 +56,7 @@ header = '''# Generated from '%(name)s' from %(url)s
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%%s-%%s" (include "lnd.fullname" $) "%(name)s" | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "dashboard-%%s-%%s" (include "lnd.fullname" $) "%(name)s" | trunc 63 | trimSuffix "-" }}
   labels:
     {{- if $.Values.lndmon.defaultDashboards.sidecarLabel }}
     {{ $.Values.lndmon.defaultDashboards.sidecarLabel }}: "1"
