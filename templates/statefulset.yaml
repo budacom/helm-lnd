@@ -40,7 +40,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/root/.lnd/post-start.sh"]
+                command: ["/root/post-start.sh"]
           {{- end }}
           ports:
             - name: rest
@@ -59,14 +59,14 @@ spec:
           livenessProbe:
             exec:
               command:
-              - /root/.lnd/health.sh
+              - /root/health.sh
             initialDelaySeconds: 10
           {{- end }}
           {{- if .Values.lnd.readinessProbe.enabled }}
           readinessProbe:
             exec:
               command:
-              - /root/.lnd/health.sh
+              - /root/health.sh
             initialDelaySeconds: 10
           {{- end }}
           resources:
@@ -78,6 +78,8 @@ spec:
             mountPath: /root/.lnd/logs
           - name: lnd-conf
             mountPath: /root/.lnd
+          - name: lnd-scripts
+            mountPath: /root
           {{- if .Values.lnd.keystoreSecret }}
           - name: certs
             mountPath: /root/.lnd/data/certs
@@ -157,7 +159,10 @@ spec:
       volumes:
       - name: lnd-conf
         configMap:
-          name: {{ template "lnd.fullname" . }}
+          name: {{ template "lnd.fullname" . }}-conf
+      - name: lnd-scripts
+        configMap:
+          name: {{ template "lnd.fullname" . }}-scripts
           defaultMode: 0775
       - name: logs
         emptyDir: {}
