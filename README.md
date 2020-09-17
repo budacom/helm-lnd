@@ -208,3 +208,15 @@ kubectl create secret generic wallet-secrets --from-literal=WALLET_PASSWORD="my_
 ### StatefulSets Caveats
 
 * https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#limitations
+
+## Dashboards
+
+This helm chart is bundled with lndmon grafana dashboards from https://github.com/lightninglabs/lndmon
+
+To update the dashboards run
+
+```
+cd hack
+pip install -r requirements.txt
+./sync_grafana_dashboards
+```
