@@ -77,7 +77,8 @@ spec:
           - name: logs
             mountPath: /root/.lnd/logs
           - name: lnd-conf
-            mountPath: /root/.lnd
+            mountPath: /root/.lnd/lnd.conf
+            subPath: lnd.conf
           - name: lnd-scripts
             mountPath: /root
           {{- if .Values.lnd.keystoreSecret }}
