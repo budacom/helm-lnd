@@ -33,15 +33,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/lnd"]
-          {{- if .Values.lnd.unlock.enabled }}
-          envFrom:
-            - secretRef:
-                name: {{ .Values.lnd.unlock.walletSecret }}
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/root/post-start.sh"]
-          {{- end }}
           ports:
             - name: rest
               containerPort: {{ .Values.services.api.restPort }}
@@ -81,6 +72,10 @@ spec:
             subPath: lnd.conf
           - name: lnd-scripts
             mountPath: /root
+          {{- if .Values.lnd.unlock.enabled }}
+          - name: wallet-secret
+            mountPath: {{ .Values.lnd.unlock.walletSecretPath | dir }}
+          {{- end }}
           {{- if .Values.lnd.keystoreSecret }}
           - name: certs
             mountPath: /root/.lnd/data/certs
@@ -182,6 +177,11 @@ spec:
       - name: "service-account"
         secret:
           secretName: {{ .Values.lndbackup.gcs.secretName }}
+      {{- end }}
+      {{- if .Values.lnd.unlock.enabled }}
+      - name: "wallet-secret"
+        secret:
+          secretName: {{ .Values.lnd.unlock.walletSecretName }}
       {{- end }}
   {{- if not .Values.lnd.persistence.enabled }}
       - name: data

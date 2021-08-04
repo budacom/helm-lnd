@@ -11,6 +11,10 @@ data:
     tlscertpath=~/.lnd/data/certs/tls.cert
     tlskeypath=~/.lnd/data/certs/tls.key
 
+{{- if .Values.lnd.unlock.enabled }}
+    wallet-unlock-password-file={{ .Values.lnd.unlock.walletSecretPath }}
+{{ end -}}
+
   {{ with .Values.services }}
     {{- if .p2p.listen }}
     {{- range .p2p.listen -}}
