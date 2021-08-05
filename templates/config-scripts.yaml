@@ -8,37 +8,6 @@ data:
   .bashrc: |-
     alias lncli="lncli --macaroonpath /root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}/admin.macaroon --tlscertpath /root/.lnd/data/certs/tls.cert --network {{ .Values.bitcoin.network }}"
 
-  {{- if .Values.lnd.unlock.enabled }}
-  post-start.sh: |-
-    #!/bin/bash
-    # Install curl
-    if ! [[ -n "$(which curl)" ]]
-    then
-      apk --update add curl
-    fi
-
-    CERT=/root/.lnd/data/certs/tls.cert
-    MACARRON=/root/.lnd/data/chain/bitcoin/{{ .Values.bitcoin.network }}/admin.macaroon
-
-    REST_URL=https://localhost:{{ .Values.services.api.restPort }}
-    WALLET_PASSWORD=${1-$WALLET_PASSWORD}
-
-    # Wait for rest service listening
-    until (
-      netstat -lnp | grep {{ .Values.services.api.restPort }}
-    )
-    do
-      sleep 1
-    done
-
-    # Unlock wallet
-    curl \
-      --cacert $CERT \
-      -H "Grpc-Metadata-macaroon: $(xxd -p -c 1000 $MACARRON | tr -d ' ')" \
-      -X POST -d "{\"wallet_password\": \"$(echo -n $WALLET_PASSWORD | tr -d '\n' | base64)\"}" \
-      ${REST_URL}/v1/unlockwallet
-
-  {{- end }}
   health.sh: |-
     #!/bin/bash
     # Install curl
